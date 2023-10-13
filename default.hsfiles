@@ -1,0 +1,228 @@
+{-# START_FILE {{name}}/package.yaml #-}
+name: {{ name }}
+version: '0.0.0.0'
+github: {{github-username}}{{^github-username}}githubuser{{/github-username}}/{{name}}
+license: MIT
+author: {{author-name}}{{^author-name}}Author name here{{/author-name}}
+maintainer: {{author-name}}{{^author-name}}Author name here{{/author-name}}
+synopsis: {{name}} synopsis.
+description: |
+  Longer {{ name }} description.
+# category: Other
+
+extra-source-files:
+- CHANGELOG.md
+- LICENSE.md
+- package.yaml
+- README.md
+
+language: GHC2021
+
+default-extensions:
+- BlockArguments
+
+ghc-options:
+# Draws heavy inspiration from this list: https://medium.com/mercury-bank/enable-all-the-warnings-a0517bc081c3
+- -Weverything
+- -Wno-missing-local-signatures # Warns if polymorphic local bindings do not have signatures
+- -Wno-missing-exported-signatures # missing-exported-signatures turns off the more strict -Wmissing-signatures. See https://ghc.haskell.org/trac/ghc/ticket/14794#ticket
+- -Wno-missing-import-lists # Requires explicit imports of _every_ function (e.g. ‘$’); too strict
+- -Wno-missed-specializations # When GHC can’t specialize a polymorphic function
+- -Wno-all-missed-specializations # See missed-specializations
+- -Wno-unsafe # Don’t use Safe Haskell warnings
+- -Wno-safe # Don’t use Safe Haskell warnings
+- -Wno-missing-safe-haskell-mode # Don't warn if the Safe Haskell mode is unspecified
+
+library:
+  dependencies:
+  - base
+  source-dirs: library
+
+tests:
+  {{ name }}-test-suite:
+    source-dirs: test-suite
+    main: Driver.hs
+    build-tools:
+    - hspec-discover
+    dependencies:
+    - base
+    - {{ name }}
+    - hspec
+    ghc-options:
+    - -rtsopts
+    - -threaded
+    - -with-rtsopts=-N
+
+benchmarks:
+  {{ name }}-benchmarks:
+    source-dirs: benchmark
+    main: Main.hs
+    dependencies:
+    - base
+    - criterion
+    - {{ name }}
+    ghc-options:
+    - -rtsopts
+    - -threaded
+    - -with-rtsopts=-N
+
+executables:
+  {{ name }}:
+    source-dirs: executable
+    main: Main.hs
+    dependencies:
+    - base
+    - {{ name }}
+    ghc-options:
+    - -rtsopts
+    - -threaded
+    - -with-rtsopts=-N
+
+{-# START_FILE {{name}}/benchmark/Main.hs #-}
+import Criterion.Main
+import Prelude
+import Example qualified ()
+
+main :: IO ()
+main = defaultMain [bench "const" (whnf const ())]
+
+{-# START_FILE {{name}}/executable/Main.hs #-}
+module Main
+  ( main
+  ) where
+
+import Example qualified
+import Prelude
+
+main :: IO ()
+main = Example.main
+
+{-# START_FILE {{name}}/library/Example.hs #-}
+module Example
+  ( main
+  ) where
+
+import Prelude
+
+main :: IO ()
+main = return ()
+
+{-# START_FILE {{name}}/test-suite/Driver.hs #-}
+{-# OPTIONS_GHC -F -pgmF hspec-discover #-}
+
+{-# START_FILE {{name}}/test-suite/Test/ExampleSpec.hs #-}
+module Test.ExampleSpec
+  ( spec
+  ) where
+
+import Example qualified ()
+import Prelude ()
+import Test.Hspec (Spec, describe, it, parallel, shouldBe)
+
+spec :: Spec
+spec = parallel do
+  describe "Example" do
+    it "works" do
+        'a' `shouldBe` 'a'
+
+{-# START_FILE {{name}}/CHANGELOG.md #-}
+## 0.0.0.0
+
+* Unreleased dev version
+
+{-# START_FILE {{name}}/README.md #-}
+# [{{name}}][]
+
+[![Build badge][]][build]
+[![Version badge][]][version]
+
+## Synopsis
+
+STUB
+
+For additional detail on the library, please see the [Haddocks][] and the
+remainder of this README.
+
+## Goals
+
+The following goals have underpinned the development of `{{name}}`:
+
+1. STUB
+2. STUB
+3. STUB
+
+[{{name}}]: https://github.com/jship/{{name}}
+[Build badge]: https://github.com/jship/{{name}}/workflows/CI/badge.svg
+[build]: https://github.com/jship/{{name}}/actions
+[Version badge]: https://img.shields.io/hackage/v/{{name}}?color=brightgreen&label=version&logo=haskell
+[version]: https://hackage.haskell.org/package/{{name}}
+[Haddocks]: https://hackage.haskell.org/package/{{name}}
+
+{-# START_FILE {{name}}/LICENSE.md #-}
+[The MIT License (MIT)][]
+
+Copyright (c) {{year}}{{^year}}2023{{/year}} {{author-name}}{{^author-name}}Author name here{{/author-name}}
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+[The MIT License (MIT)]: https://opensource.org/licenses/MIT
+
+{-# START_FILE .gitignore #-}
+# Stack uses this directory as scratch space.
+.stack-work/
+
+{-# START_FILE .github/workflows/ci.yaml #-}
+{{=<% %>=}}
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: main
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macOS-latest]
+        resolver:
+        - lts-21 # ghc-9.4.7
+
+    steps:
+    - uses: actions/checkout@v3
+    - id: stack
+      uses: freckle/stack-action@v4
+      with:
+        stack-yaml: stack/stack-${{ matrix.resolver }}.yaml
+        stack-arguments: --bench --no-run-benchmarks --haddock --no-haddock-deps
+<%={{ }}=%>
+
+{-# START_FILE stack.yaml #-}
+resolver: lts-21.14
+packages:
+- ./{{name}}
+ghc-options:
+  "$everything": -haddock -O2
+
+{-# START_FILE stack/lts-21.yaml #-}
+resolver: lts-21.14
+packages:
+- ../{{name}}
