@@ -20,6 +20,7 @@ language: GHC2021
 
 default-extensions:
 - BlockArguments
+- LambdaCase
 
 ghc-options:
 # Draws heavy inspiration from this list: https://medium.com/mercury-bank/enable-all-the-warnings-a0517bc081c3
