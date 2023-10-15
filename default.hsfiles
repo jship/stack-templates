@@ -68,7 +68,7 @@ benchmarks:
     - -with-rtsopts=-N
 
 executables:
-  {{ name }}:
+  {{ name }}-demo:
     source-dirs: executable
     main: Main.hs
     dependencies:
