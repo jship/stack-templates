@@ -53,7 +53,7 @@ tests:
     ghc-options:
     - -rtsopts
     - -threaded
-    - -with-rtsopts=-N
+    - -with-rtsopts "-N"
 
 benchmarks:
   {{ name }}-benchmarks:
@@ -66,7 +66,7 @@ benchmarks:
     ghc-options:
     - -rtsopts
     - -threaded
-    - -with-rtsopts=-N
+    - -with-rtsopts "-N"
 
 executables:
   {{ name }}-demo:
@@ -78,7 +78,7 @@ executables:
     ghc-options:
     - -rtsopts
     - -threaded
-    - -with-rtsopts=-N
+    - -with-rtsopts "-N"
 
 {-# START_FILE {{name}}/benchmark/Main.hs #-}
 import Criterion.Main
