@@ -163,7 +163,7 @@ The following goals have underpinned the development of `{{name}}`:
 {-# START_FILE {{name}}/LICENSE.md #-}
 [The MIT License (MIT)][]
 
-Copyright (c) {{year}}{{^year}}2023{{/year}} {{author-name}}{{^author-name}}Author name here{{/author-name}}
+Copyright (c) {{year}}{{^year}}2024{{/year}} {{author-name}}{{^author-name}}Author name here{{/author-name}}
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -206,7 +206,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macOS-latest]
         resolver:
-        - lts-21 # ghc-9.4.7
+        - lts-21 # ghc-9.4.8
 
     steps:
     - uses: actions/checkout@v3
@@ -218,13 +218,15 @@ jobs:
 <%={{ }}=%>
 
 {-# START_FILE stack.yaml #-}
-resolver: lts-21.14
+resolver: lts-21.25
 packages:
 - ./{{name}}
 ghc-options:
-  "$everything": -haddock -O2
+  "$everything": -O2 -haddock
 
-{-# START_FILE stack/lts-21.yaml #-}
-resolver: lts-21.14
+{-# START_FILE stack/stack-lts-21.yaml #-}
+resolver: lts-21.25
 packages:
 - ../{{name}}
+ghc-options:
+  "$everything": -O2
