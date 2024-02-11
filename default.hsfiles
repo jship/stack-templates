@@ -125,7 +125,7 @@ spec :: Spec
 spec = parallel do
   describe "Example" do
     it "works" do
-        'a' `shouldBe` 'a'
+      'a' `shouldBe` 'a'
 
 {-# START_FILE {{name}}/CHANGELOG.md #-}
 ## 0.0.0.0
