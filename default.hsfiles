@@ -107,7 +107,7 @@ module Example
 import Prelude
 
 main :: IO ()
-main = return ()
+main = pure ()
 
 {-# START_FILE {{name}}/test-suite/Driver.hs #-}
 {-# OPTIONS_GHC -F -pgmF hspec-discover #-}
