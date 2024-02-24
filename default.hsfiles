@@ -187,8 +187,14 @@ SOFTWARE.
 [The MIT License (MIT)]: https://opensource.org/licenses/MIT
 
 {-# START_FILE .gitignore #-}
-# Stack uses this directory as scratch space.
 .stack-work/
+*.eventlog
+*.eventlog.html
+*.hp
+*.dump-*
+
+bin/
+.DS_Store
 
 {-# START_FILE .github/workflows/ci.yaml #-}
 {{=<% %>=}}
