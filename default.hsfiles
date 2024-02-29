@@ -4,8 +4,8 @@ version: '0.0.0.0'
 git: https://sr.ht/~{{srht-username}}{{^srht-username}}sr.ht username here{{/srht-username}}/{{name}}/
 license: MIT
 license-file: LICENSE
-author: {{author-name}}{{^author-name}}Author name here{{/author-name}} <{{author-email}}{{^author-email}}Author email here{{/author-email}}>
-maintainer: {{author-name}}{{^author-name}}Author name here{{/author-name}} <{{author-email}}{{^author-email}}Author email here{{/author-email}}>
+author: {{author-name}}{{^author-name}}Author name here{{/author-name}}
+maintainer: {{author-name}}{{^author-name}}Author name here{{/author-name}}
 synopsis: {{name}} synopsis.
 description: |
   Longer {{ name }} description.
