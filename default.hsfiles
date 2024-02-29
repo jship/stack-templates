@@ -1,11 +1,11 @@
 {-# START_FILE {{name}}/package.yaml #-}
 name: {{ name }}
 version: '0.0.0.0'
-github: {{github-username}}{{^github-username}}githubuser{{/github-username}}/{{name}}
+git: https://sr.ht/~{{srht-username}}{{^srht-username}}sr.ht username here{{/srht-username}}/{{name}}/
 license: MIT
-license-file: LICENSE.md
-author: {{author-name}}{{^author-name}}Author name here{{/author-name}}
-maintainer: {{author-name}}{{^author-name}}Author name here{{/author-name}}
+license-file: LICENSE
+author: {{author-name}}{{^author-name}}Author name here{{/author-name}} <{{author-email}}{{^author-email}}Author email here{{/author-email}}>
+maintainer: {{author-name}}{{^author-name}}Author name here{{/author-name}} <{{author-email}}{{^author-email}}Author email here{{/author-email}}>
 synopsis: {{name}} synopsis.
 description: |
   Longer {{ name }} description.
@@ -13,7 +13,7 @@ description: |
 
 extra-source-files:
 - CHANGELOG.md
-- LICENSE.md
+- LICENSE
 - package.yaml
 - README.md
 
@@ -136,7 +136,6 @@ spec = parallel do
 {-# START_FILE {{name}}/README.md #-}
 # [{{name}}][]
 
-[![Build badge][]][build]
 [![Version badge][]][version]
 
 ## Synopsis
@@ -154,24 +153,29 @@ The following goals have underpinned the development of `{{name}}`:
 2. STUB
 3. STUB
 
-[{{name}}]: https://github.com/jship/{{name}}
-[Build badge]: https://github.com/jship/{{name}}/workflows/CI/badge.svg
-[build]: https://github.com/jship/{{name}}/actions
+[{{name}}]: https://sr.ht/~{{srht-username}}{{^srht-username}}srht username here{{/srht-username}}/{{name}}/
 [Version badge]: https://img.shields.io/hackage/v/{{name}}?color=brightgreen&label=version&logo=haskell
 [version]: https://hackage.haskell.org/package/{{name}}
 [Haddocks]: https://hackage.haskell.org/package/{{name}}
 
-{-# START_FILE {{name}}/LICENSE.md #-}
-[The MIT License (MIT)][]
+{-# START_FILE .reuse/dep5 #-}
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+
+Files: *
+Copyright: {{year}}{{^year}}2024{{/year}} {{author-name}}{{^author-name}}Author name here{{/author-name}}
+License: MIT
+
+{-# START_FILE LICENSES/MIT.txt #-}
+MIT License
 
 Copyright (c) {{year}}{{^year}}2024{{/year}} {{author-name}}{{^author-name}}Author name here{{/author-name}}
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-of the Software, and to permit persons to whom the Software is furnished to do
-so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
@@ -184,7 +188,28 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-[The MIT License (MIT)]: https://opensource.org/licenses/MIT
+{-# START_FILE {{name}}/LICENSE #-}
+MIT License
+
+Copyright (c) {{year}}{{^year}}2024{{/year}} {{author-name}}{{^author-name}}Author name here{{/author-name}}
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 {-# START_FILE .gitignore #-}
 .stack-work/
@@ -195,34 +220,6 @@ SOFTWARE.
 
 bin/
 .DS_Store
-
-{-# START_FILE .github/workflows/ci.yaml #-}
-{{=<% %>=}}
-name: CI
-
-on:
-  pull_request:
-  push:
-    branches: main
-
-jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macOS-latest]
-        resolver:
-        - lts-21 # ghc-9.4.8
-
-    steps:
-    - uses: actions/checkout@v3
-    - id: stack
-      uses: freckle/stack-action@v4
-      with:
-        stack-yaml: stack/stack-${{ matrix.resolver }}.yaml
-        stack-arguments: --bench --no-run-benchmarks --haddock --no-haddock-deps
-<%={{ }}=%>
 
 {-# START_FILE stack.yaml #-}
 resolver: lts-21.25
